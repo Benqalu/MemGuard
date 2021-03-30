@@ -31,7 +31,7 @@ s_race = dataset[:, column.index("race")].reshape(-1)
 s_sex = dataset[:, column.index("sex")].reshape(-1)
 size = X.shape[0]
 # multiplier = size // 9
-multiplier = 100
+multiplier = 1000
 
 # Rewrite config file
 f = open("config_template.txt")
