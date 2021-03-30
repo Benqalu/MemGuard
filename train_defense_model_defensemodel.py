@@ -1,5 +1,9 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import numpy as np
-np.random.seed(1000)
+np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+# np.random.seed(1000)
 import imp
 import input_data_class
 import keras
@@ -7,7 +11,6 @@ from keras.models import Model
 from keras.backend.tensorflow_backend import set_session
 from keras import backend as K
 import tensorflow as tf
-import os
 import configparser
 import argparse
 
@@ -45,7 +48,7 @@ y_train=keras.utils.to_categorical(y_train,user_label_dim)
 
 
 ####load target model
-npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_user.npz".format(user_epochs))
+npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_user.npz".format(user_epochs),allow_pickle=True)
 weights=npzdata['x']
 input_shape=x_train.shape[1:]
 model=fccnet.model_user(input_shape=input_shape,labels_dim=user_label_dim)

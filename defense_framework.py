@@ -1,5 +1,9 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import numpy as np
-np.random.seed(1000)
+np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+# np.random.seed(1000)
 import imp
 import input_data_class
 import keras
@@ -7,7 +11,6 @@ from keras.models import Model
 from keras.backend.tensorflow_backend import set_session
 from keras import backend as K
 import tensorflow as tf
-import os
 import configparser
 import argparse
 from scipy.special import softmax
@@ -58,7 +61,7 @@ print("Loading Evaluation dataset...")
 
 
 print("Loading target model...")
-npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_user.npz".format(user_epochs))
+npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_user.npz".format(user_epochs), allow_pickle=True)
 
 ######load target model##############
 weights=npzdata['x']
@@ -97,10 +100,10 @@ print("f evaluate logits shape: {}".format(f_evaluate_logits.shape))
 
 input_shape=f_evaluate.shape[1:]
 print("Loading defense model...")
-npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_defense.npz".format(defense_epochs))
+npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_defense.npz".format(defense_epochs), allow_pickle=True)
 model=fccnet.model_defense_optimize(input_shape=input_shape,labels_dim=num_classes)
 model.compile(loss=keras.losses.binary_crossentropy,optimizer=keras.optimizers.SGD(lr=0.001),metrics=['accuracy'])
-#model.summary()
+model.summary()
 weights=npzdata['x']
 model.set_weights(weights)
 model.trainable=False
@@ -138,7 +141,7 @@ result_array=np.zeros(f_evaluate.shape,dtype=np.float)
 result_array_logits=np.zeros(f_evaluate.shape,dtype=np.float)
 success_fraction=0.0
 max_iteration=300   #max iteration if can't find adversarial example that satisfies requirements
-np.random.seed(1000)
+# np.random.seed(1000)
 for test_sample_id in np.arange(0,f_evaluate.shape[0]):
     if test_sample_id%100==0:
         print("test sample id: {}".format(test_sample_id))
@@ -201,7 +204,7 @@ del model
 
 input_shape=f_evaluate.shape[1:]
 print("Loading defense model...")
-npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_defense.npz".format(defense_epochs))
+npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_defense.npz".format(defense_epochs), allow_pickle=True)
 model=fccnet.model_defense(input_shape=input_shape,labels_dim=num_classes)
 
 weights=npzdata['x']

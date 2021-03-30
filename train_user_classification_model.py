@@ -1,5 +1,9 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import numpy as np
-np.random.seed(1000)
+np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+# np.random.seed(1000)
 import imp 
 import input_data_class
 import keras
@@ -7,10 +11,8 @@ from keras.models import Model
 from keras.backend.tensorflow_backend import set_session
 from keras import backend as K
 import tensorflow as tf
-import os
 import configparser
 import argparse
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-dataset',default='location')

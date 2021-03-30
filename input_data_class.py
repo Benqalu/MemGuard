@@ -1,7 +1,7 @@
 import numpy as np 
 import ast
 import configparser
-np.random.seed(100)
+# np.random.seed(100)
 import os
 
 

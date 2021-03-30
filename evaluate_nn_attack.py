@@ -1,5 +1,9 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import numpy as np
-np.random.seed(10000)
+np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+# np.random.seed(10000)
 import imp
 import input_data_class
 import keras
@@ -50,14 +54,14 @@ evaluation_noise_filepath=result_folder+"/attack/"+"noise_data_evaluation.npz"
 print(evaluation_noise_filepath)
 if not os.path.isfile(evaluation_noise_filepath):
     raise FileNotFoundError
-npz_defense=np.load(evaluation_noise_filepath)
+npz_defense=np.load(evaluation_noise_filepath, allow_pickle=True)
 f_evaluate_noise=npz_defense['defense_output']
 f_evaluate_origin=npz_defense['tc_output']
 
 
 
 f_evaluate_defense=np.zeros(f_evaluate_noise.shape,dtype=np.float)
-np.random.seed(100)  #one time randomness, fix the seed
+# np.random.seed(100)  #one time randomness, fix the seed
 for i in np.arange(f_evaluate_defense.shape[0]):
     if np.random.rand(1)<0.5:
         f_evaluate_defense[i,:]=f_evaluate_noise[i,:]
@@ -70,7 +74,7 @@ for i in np.arange(f_evaluate_defense.shape[0]):
 
 (x_train,y_train,l_train) =input_data.input_data_attacker_adv1()
 y_train=keras.utils.to_categorical(y_train,user_label_dim)
-npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_attack_shallow_model_{}.npz".format(user_epochs,args.adv))
+npzdata=np.load(result_folder+"/models/"+"epoch_{}_weights_attack_shallow_model_{}.npz".format(user_epochs,args.adv), allow_pickle=True)
 weights=npzdata['x']
 input_shape=x_train.shape[1:]
 model=fccnet.model_user(input_shape=input_shape,labels_dim=user_label_dim)
@@ -127,6 +131,8 @@ for i in np.arange(epochs):
         print('Train loss:', scores_train[0])
         print('Train accuracy:', scores_train[1])  
 
+np.savez('./result/location/code_publish/attack/mia_results.npz', true=label_test, origin=model.predict(b_test_origin).reshape(-1), defense=model.predict(b_test).reshape(-1))
+
 result_filepath=result_folder+"/"+config[dataset]["result_file_publish"]
 
 print(result_folder)
@@ -140,7 +146,7 @@ if not os.path.isfile(result_filepath):
 evaluation_noise_filepath=result_folder+"/attack/"+"noise_data_evaluation.npz"
 if not os.path.isfile(evaluation_noise_filepath) :
     raise FileNotFoundError
-npz_defense=np.load(evaluation_noise_filepath)
+npz_defense=np.load(evaluation_noise_filepath, allow_pickle=True)
 f_evaluate_noise=npz_defense['defense_output']
 f_evaluate_origin=npz_defense['tc_output']
 f_evaluate_origin_score=npz_defense['predict_origin']
@@ -161,7 +167,7 @@ inference_accuracy_list=[]
 for epsilon_value in epsilon_value_list: 
     inference_accuracy=0.0
 
-    np.random.seed(100)  
+    # np.random.seed(100)  
     for i in np.arange(f_evaluate_origin.shape[0]):
         distortion_noise=np.sum(np.abs(f_evaluate_origin[i,:]-f_evaluate_noise[i,:]))
         p_value=0.0
@@ -175,7 +181,6 @@ for epsilon_value in epsilon_value_list:
         if predict_result_defense[i]==label_test[i]:
             inference_accuracy+=p_value
     inference_accuracy_list.append(inference_accuracy/(float(f_evaluate_origin.shape[0])))
-
 
 print("Budget list: {}".format(epsilon_value_list))
 print("inference accuracy list: {}".format(inference_accuracy_list))       
