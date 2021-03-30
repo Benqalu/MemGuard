@@ -177,12 +177,12 @@ for test_sample_id in np.arange(0,f_evaluate.shape[0]):
             j+=1        
         if max_label!=result_max_label:
             if iterate_time==1:
-                print("failed sample for label not same for id: {},c3:{} not add noise".format(test_sample_id,c3))
+                print("failed sample for label not same for id: {}, not add noise".format(test_sample_id))
                 success_fraction-=1.0
             break                
         if ((model.predict(sample_f)-0.5)*(result_predict_scores_initial-0.5))>0:
             if iterate_time==1:
-                print("max iteration reached with id: {}, max score: {}, prediction_score: {}, c3: {}, not add noise".format(test_sample_id,np.amax(softmax(sample_f)),result_predict_scores,c3))
+                print("max iteration reached with id: {}, not add noise".format(test_sample_id))
             break
         last_iteration_result[:]=softmax(sample_f)[0,back_index[test_sample_id,:]]
         last_iteration_result_logits[:]=sample_f[0,back_index[test_sample_id,:]]

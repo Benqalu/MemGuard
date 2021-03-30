@@ -9,8 +9,7 @@ import numpy as np
 
 def model_user(input_shape,labels_dim):
     inputs=Input(shape=input_shape)
-    middle_layer=Dense(1024,activation='relu')(inputs)
-    middle_layer=Dense(512,activation='relu')(middle_layer)
+    middle_layer=Dense(512,activation='relu')(inputs)
     middle_layer=Dense(256,activation='relu')(middle_layer)
     middle_layer=Dense(128,activation='relu')(middle_layer)
     outputs_logits=Dense(labels_dim)(middle_layer)
@@ -22,7 +21,6 @@ def model_defense(input_shape,labels_dim):
     inputs_b=Input(shape=input_shape)
     x_b=Dense(256,activation='relu')(inputs_b)
     x_b=Dense(128,activation='relu')(x_b)
-    x_b=Dense(64,activation='relu')(x_b)
     outputs_pre=Dense(labels_dim)(x_b)
     outputs=Activation('sigmoid')(outputs_pre)
     model = Model(inputs=inputs_b, outputs=outputs)
@@ -34,7 +32,6 @@ def model_defense_optimize(input_shape,labels_dim):
     x_b=Activation('softmax')(inputs_b)
     x_b=Dense(256,activation='relu')(x_b)
     x_b=Dense(128,activation='relu')(x_b)
-    x_b=Dense(64,activation='relu')(x_b)
     outputs_pre=Dense(labels_dim)(x_b)
     outputs=Activation('sigmoid')(outputs_pre)
     model = Model(inputs=inputs_b, outputs=outputs)
@@ -43,8 +40,7 @@ def model_defense_optimize(input_shape,labels_dim):
 
 def model_attack_nn(input_shape,labels_dim):
     inputs_b=Input(shape=input_shape)
-    x_b=Dense(512,activation='relu')(inputs_b)
-    x_b=Dense(256,activation='relu')(x_b)
+    x_b=Dense(256,activation='relu')(inputs_b)
     x_b=Dense(128,activation='relu')(x_b)
     outputs_pre=Dense(labels_dim)(x_b)
     outputs=Activation('sigmoid')(outputs_pre)
