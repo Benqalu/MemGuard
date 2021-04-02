@@ -14,6 +14,7 @@ import tensorflow as tf
 import os
 import configparser
 import argparse
+from copy import deepcopy
 
 
 parser = argparse.ArgumentParser()
@@ -57,6 +58,10 @@ if not os.path.isfile(evaluation_noise_filepath):
 npz_defense=np.load(evaluation_noise_filepath, allow_pickle=True)
 f_evaluate_noise=npz_defense['defense_output']
 f_evaluate_origin=npz_defense['tc_output']
+
+y_true = deepcopy(npz_defense['y_true'])
+y_origin = deepcopy(npz_defense['defense_output'])
+y_defense = deepcopy(npz_defense['tc_output'])
 
 
 
@@ -131,7 +136,7 @@ for i in np.arange(epochs):
         print('Train loss:', scores_train[0])
         print('Train accuracy:', scores_train[1])  
 
-np.savez('./result/location/code_publish/attack/mia_results.npz', true=label_test, origin=model.predict(b_test_origin).reshape(-1), defense=model.predict(b_test).reshape(-1))
+np.savez('./result/location/code_publish/attack/mia_results.npz', y_true=y_true, y_origin=y_origin, y_defense=y_defense, true=label_test, origin=model.predict(b_test_origin).reshape(-1), defense=model.predict(b_test).reshape(-1))
 
 result_filepath=result_folder+"/"+config[dataset]["result_file_publish"]
 

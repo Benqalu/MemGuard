@@ -22,7 +22,7 @@ dataset = MinMaxScaler().fit_transform(dataset)
 
 # Re-org dataset
 # multiplier = size // 9
-multiplier = int(min(2000,dataset.shape[0]//4))
+multiplier = int(min(100,dataset.shape[0]//4))
 dataset = np.vstack([
 	dataset[0*multiplier:2*multiplier,:],
 	dataset[2*multiplier:4*multiplier,:],
@@ -97,9 +97,6 @@ final_s_race = np.hstack(
 final_s_sex = np.hstack(
 	[s_sex[0 * multiplier : 2 * multiplier], s_sex[2 * multiplier : 4 * multiplier]]
 )
-final_l_true = result["true"]
-final_l_origin = result["origin"]
-final_l_defense = result["defense"]
 
 # Save to file with timestamp
 import time
@@ -107,9 +104,12 @@ import time
 ts = int(time.time())
 np.savez(
 	f"./result/{data}_{ts}.npz",
+	y_true=result["y_true"],
+	y_origin=result["y_origin"],
+	y_defense=result["y_defense"],
 	s_race=final_s_race,
 	s_sex=final_s_sex,
-	l_true=final_l_true,
-	l_origin=final_l_origin,
-	l_defense=final_l_defense,
+	l_true=result["true"],
+	l_origin=result["origin"],
+	l_defense=result["defense"],
 )

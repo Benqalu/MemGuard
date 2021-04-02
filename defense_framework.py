@@ -213,4 +213,4 @@ model.set_weights(weights)
 model.trainable=False
 predict_origin=model.predict(np.sort(f_evaluate_origin,axis=1))
 predict_modified=model.predict(np.sort(result_array,axis=1))
-np.savez(result_folder+"/attack/"+"noise_data_{}.npz".format(args.qt),defense_output=result_array,defense_output_logits=result_array_logits,tc_output=f_evaluate_origin,tc_output_logits=f_evaluate_logits_origin,predict_origin=predict_origin,predict_modified=predict_modified)
+np.savez(result_folder+"/attack/"+"noise_data_{}.npz".format(args.qt),defense_output=result_array,defense_output_logits=result_array_logits,tc_output=f_evaluate_origin,tc_output_logits=f_evaluate_logits_origin,predict_origin=predict_origin,predict_modified=predict_modified,y_true=y_evaluate)
