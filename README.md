@@ -10,6 +10,7 @@
 - For the original location dataset, the MemGuard reads a configuration file *config.ini*, however in our case, since we replaced the dataset we must keep the configuration consistent, so I created a template file named *config_template.txt*, my script ```run.py``` will read the template and change the parameters in it according to the dataset you choose, and overwrite current config.ini. 
 - There are still some parameters that you can tune. But remember, **when you tune the parameters, you need to change them in config_template.txt, not config.ini**. 
 - All parameters in config_template.txt that are not a format string (like %d, %f), can be tuned.
+- Another part you can tune is the model, which is stored in ```./model/fccnet_location.py```, you can tune the number of hidden layers, neurons of each layer, etc.
 - When you run ```run.py```, the code will output a ```.npz``` file in ```./result/``` named with the dataset you choose and a time stamp;
 - To get a stable experiment results, you need to run the script for each dataset multiple times, like 10, you can manually run them or use ```exec.py``, which is a very simple script to do so;
 - The last a few lines in ```run.py``` indicates the structure of the outputed file, you can collect them manually, or run my code ```parse_npz.py``` in ```./results/``` to get the need results. However, my collection code only collects specific metrics, if the professor requires more results, you need to understand the structure and do it yourself.
