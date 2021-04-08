@@ -140,7 +140,7 @@ label_mask_array=np.zeros([1,user_label_dim],dtype=np.float)
 result_array=np.zeros(f_evaluate.shape,dtype=np.float)
 result_array_logits=np.zeros(f_evaluate.shape,dtype=np.float)
 success_fraction=0.0
-max_iteration=300   #max iteration if can't find adversarial example that satisfies requirements
+max_iteration=1000   #max iteration if can't find adversarial example that satisfies requirements
 # np.random.seed(1000)
 for test_sample_id in np.arange(0,f_evaluate.shape[0]):
     if test_sample_id%100==0:

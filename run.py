@@ -22,7 +22,7 @@ dataset = MinMaxScaler().fit_transform(dataset)
 
 # Re-org dataset
 # multiplier = size // 9
-multiplier = int(min(2000,dataset.shape[0]//4))
+multiplier = int(min(10,dataset.shape[0]//4))
 dataset = np.vstack([
 	dataset[0*multiplier:2*multiplier,:],
 	dataset[2*multiplier:4*multiplier,:],
@@ -90,7 +90,7 @@ print(">>> Running >>>", cmd)
 os.system(cmd)
 
 # Prepare final result
-result = np.load("./result/location/code_publish/attack/mia_results.npz")['report']
+result = np.load("./result/location/code_publish/attack/mia_results.npz", allow_pickle=True)['report'].reshape(1)[0]
 final_s_race = np.hstack(
 	[s_race[0 * multiplier : 2 * multiplier], s_race[2 * multiplier : 4 * multiplier]]
 )
