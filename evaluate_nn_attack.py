@@ -134,9 +134,18 @@ for i in np.arange(epochs):
         print('Test accuracy no defense:', scores_test_nodefense[1])  
         scores_train = model.evaluate(b_train, label_train, verbose=0)
         print('Train loss:', scores_train[0])
-        print('Train accuracy:', scores_train[1])  
+        print('Train accuracy:', scores_train[1]) 
 
-np.savez('./result/location/code_publish/attack/mia_results.npz', y_true=y_true, y_origin=y_origin, y_defense=y_defense, true=label_test, origin=model.predict(b_test_origin).reshape(-1), defense=model.predict(b_test).reshape(-1))
+report = {
+    'y_true':y_true,
+    'y_origin':y_origin,
+    'y_defense':y_defense,
+    'l_true':label_test,
+    'l_pred_orig':model.predict(b_test_origin).reshape(-1),
+    'l_pred_defense':model.predict(b_test).reshape(-1)
+} 
+
+# np.savez('./result/location/code_publish/attack/mia_results.npz', y_true=y_true, y_origin=y_origin, y_defense=y_defense, true=label_test, origin=model.predict(b_test_origin).reshape(-1), defense=model.predict(b_test).reshape(-1))
 
 result_filepath=result_folder+"/"+config[dataset]["result_file_publish"]
 
@@ -187,5 +196,13 @@ for epsilon_value in epsilon_value_list:
             inference_accuracy+=p_value
     inference_accuracy_list.append(inference_accuracy/(float(f_evaluate_origin.shape[0])))
 
+intensities = {}
+for i in range(0, len(epsilon_value_list)):
+    intensities[epsilon_value_list[i]] = inference_accuracy_list[i]
+
+report['intensities']=intensities
+
 print("Budget list: {}".format(epsilon_value_list))
-print("inference accuracy list: {}".format(inference_accuracy_list))       
+print("inference accuracy list: {}".format(inference_accuracy_list))  
+
+np.savez('./result/location/code_publish/attack/mia_results.npz', report=report)

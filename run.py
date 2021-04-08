@@ -22,7 +22,7 @@ dataset = MinMaxScaler().fit_transform(dataset)
 
 # Re-org dataset
 # multiplier = size // 9
-multiplier = int(min(100,dataset.shape[0]//4))
+multiplier = int(min(2000,dataset.shape[0]//4))
 dataset = np.vstack([
 	dataset[0*multiplier:2*multiplier,:],
 	dataset[2*multiplier:4*multiplier,:],
@@ -90,7 +90,7 @@ print(">>> Running >>>", cmd)
 os.system(cmd)
 
 # Prepare final result
-result = np.load("./result/location/code_publish/attack/mia_results.npz")
+result = np.load("./result/location/code_publish/attack/mia_results.npz")['report']
 final_s_race = np.hstack(
 	[s_race[0 * multiplier : 2 * multiplier], s_race[2 * multiplier : 4 * multiplier]]
 )
@@ -109,7 +109,8 @@ np.savez(
 	y_defense=result["y_defense"],
 	s_race=final_s_race,
 	s_sex=final_s_sex,
-	l_true=result["true"],
-	l_origin=result["origin"],
-	l_defense=result["defense"],
+	l_true=result["l_true"],
+	l_origin=result["l_pred_orig"],
+	l_defense=result["l_pred_defense"],
+	intensities=result['intensities'],
 )
