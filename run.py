@@ -22,7 +22,7 @@ dataset = MinMaxScaler().fit_transform(dataset)
 
 # Re-org dataset
 # multiplier = size // 9
-multiplier = int(min(10,dataset.shape[0]//4))
+multiplier = int(min(2000,dataset.shape[0]//4))
 dataset = np.vstack([
 	dataset[0*multiplier:2*multiplier,:],
 	dataset[2*multiplier:4*multiplier,:],
