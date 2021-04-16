@@ -121,6 +121,22 @@ class Metric(object):
 
 		return ret
 
+	def recall_groups(self,s):
+		metric1=Metric(true=self.true[s==0],pred=self.pred[s==0])
+		metric2=Metric(true=self.true[s==1],pred=self.pred[s==1])
+		return np.array([metric1.recall(), metric2.recall()])
+
+	def precision_groups(self,s):
+		metric1=Metric(true=self.true[s==0],pred=self.pred[s==0])
+		metric2=Metric(true=self.true[s==1],pred=self.pred[s==1])
+		return np.array([metric1.precision(), metric2.precision()])
+
+	def accuracy_groups(self,s):
+		metric1=Metric(true=self.true[s==0],pred=self.pred[s==0])
+		metric2=Metric(true=self.true[s==1],pred=self.pred[s==1])
+		return np.array([metric1.accuracy(), metric2.accuracy()])
+
+
 	def recall_disparity(self,s,absolute=True):
 		z=np.array(s).astype(int)
 		values=set(z)
