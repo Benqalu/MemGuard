@@ -178,10 +178,11 @@ epsilon_value_list=[float(t) for t in epsilon_value_list]
 
 inference_accuracy_list=[]
 
+intensities = {}
 for epsilon_value in epsilon_value_list: 
     inference_accuracy=0.0
-
-    # np.random.seed(100)  
+    # np.random.seed(100) 
+    acc_values = np.zeros(f_evaluate_origin.shape[0])
     for i in np.arange(f_evaluate_origin.shape[0]):
         distortion_noise=np.sum(np.abs(f_evaluate_origin[i,:]-f_evaluate_noise[i,:]))
         p_value=0.0
@@ -189,16 +190,14 @@ for epsilon_value in epsilon_value_list:
             p_value=0.0
         else:
             p_value=min(epsilon_value/distortion_noise,1.0)
-
         if predict_result_origin[i]==label_test[i]:
             inference_accuracy+=1.0-p_value
+            acc_values[i]+=1.0-p_value
         if predict_result_defense[i]==label_test[i]:
             inference_accuracy+=p_value
+            acc_values[i]+=p_value
+    intensities[epsilon_value]=acc_values
     inference_accuracy_list.append(inference_accuracy/(float(f_evaluate_origin.shape[0])))
-
-intensities = {}
-for i in range(0, len(epsilon_value_list)):
-    intensities[epsilon_value_list[i]] = inference_accuracy_list[i]
 
 report['intensities']=intensities
 

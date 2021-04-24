@@ -42,7 +42,9 @@ for attr in ['race', 'sex']:
 			},
 			'data':dataname,
 			'attr':attr,
+			'intensities_eps':[1.0,0.7,0.5,0.3,0.1,0.0],
 			'intensities':np.array([0.,0.,0.,0.,0.,0.]),
+			'intensities_group':np.array([[0.,0.,0.,0.,0.,0.],[0.,0.,0.,0.,0.,0.]]),
 			'count':0,
 		}
 		for fname in fnames:
@@ -96,8 +98,16 @@ for attr in ['race', 'sex']:
 			res['mia_defense']['recall_groups'] += metric.recall_groups(s=z[f's_{attr}'])
 			
 			intensities = z['intensities'].reshape(1)[0]
-
-			res['intensities']+=np.array([intensities[item] for item in intensities_params])
+			epsilons = [1.0,0.7,0.5,0.3,0.1,0.0]
+			for i in range(0,len(epsilons)):
+				eps = epsilons[i]
+				gidx = z[f's_{attr}']
+				int_all = intensities[eps].sum() / intensities[eps].shape[0]
+				int_g0 = intensities[eps][gidx==0].sum() / (gidx==0).sum()
+				int_g1 = intensities[eps][gidx==1].sum() / (gidx==1).sum()
+				res['intensities'][i]+=int_all
+				res['intensities_group'][0][i]+=int_g0
+				res['intensities_group'][1][i]+=int_g1
 		
 		if res['count']>0:
 			for item in res:
@@ -106,7 +116,7 @@ for attr in ['race', 'sex']:
 						res[item][jtem]/=res['count']
 						if type(res[item][jtem]) is np.ndarray:
 							res[item][jtem] = res[item][jtem].tolist()
-				if item=='intensities':
+				if item in ['intensities', 'intensities_group']:
 					res[item]/=res['count']
 					res[item]=res[item].tolist()
 			res['average_of']=res['count']
